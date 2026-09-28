@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Canis Mundana</title>
+<style>
+  /* ===== ESTILO DE LA PÁGINA (usa solo los 3 colores del juego) ===== */
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #181d1a;   /* oscuro */
+    font-family: Arial, sans-serif;
+  }
+  canvas {
+    border: 3px solid #7c8477;   /* medio */
+    border-radius: 8px;
+    max-width: 100vw;
+    max-height: 100vh;
+    touch-action: none;           /* evita scroll en celular */
+  }
+</style>
+</head>
+<body>
+
+<canvas id="juego" width="400" height="600"></canvas>
+
+<script>
+// =====================================================
+//  ★★★  CONFIGURACIÓN VISUAL — ¡CAMBIA ESTO A GUSTO! ★★★
+//  El juego usa SOLO estos 3 colores:
+//    #d3e4d3 (claro)  #7c8477 (medio)  #181d1a (oscuro)
+// =====================================================
+const CONFIG = {
+  // --- COLORES (solo los 3 permitidos) ---
+  colorFondo:   "#d3e4d3",  // claro: cielo
+  colorPelota:  "#181d1a",  // oscuro: la pelota
+  colorEdificio:"#7c8477",  // medio: los edificios
+  colorBorde:   "#181d1a",  // oscuro: bordes y ventanas
+  colorSuelo:   "#7c8477",  // medio: el suelo
+  colorTexto:   "#181d1a",  // oscuro: textos
+
+  // --- TAMAÑOS ---
+  pelotaRadio:   15,   // tamaño de la pelota
+  edificioAncho: 60,   // ancho de los edificios
+  hueco:         150,  // espacio libre entre edificio de arriba y abajo
+  edificioEspacio: 220,// distancia horizontal entre edificios
+  sueloAlto:     80,   // altura del suelo
+
+  // --- JUGABILIDAD ---
+  gravedad: 0.4,     // qué tan rápido cae (más = más difícil)
+  salto:    -7,      // fuerza del salto (más negativo = salta más)
+  velocidad: 2,      // velocidad de los edificios (más = más difícil)
+  meta: 20,          // ★ edificios a pasar para ganar
+};
+// =====================================================
+
+
+// --- Preparación (no hace falta tocar) ---
+const canvas = document.getElementById("juego");
+const ctx = canvas.getContext("2d");
+const W = canvas.width;
+const H = canvas.height;
+
+// --- Imagen de la pelota (incrustada en el archivo, no necesita nada externo) ---
+const imgPelota = new Image();
+imgPelota.src = "data:image/png;base64,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";
+
+// Botones de la pantalla de victoria (posición y tamaño)
+const BTN_CONTINUAR  = { x: 70, y: 340, w: 260, h: 50 };
+const BTN_REINTENTAR = { x: 70, y: 405, w: 260, h: 50 };
+
+// --- Estado del juego ---
+let pelota, edificios, puntos, estado, modoInfinito;
+
+function reiniciar() {
+  // ★ La pelota empieza ARRIBA (y: 150) para no tapar el título
+  pelota = { x: 80, y: 150, vel: 0 };
+  edificios = [];
+  edificios.push(nuevoEdificio(W + 50));  // primer edificio
+  puntos = 0;
+  modoInfinito = false;
+  estado = "inicio";  // "inicio" | "jugando" | "fin" | "victoria"
+}
+
+function nuevoEdificio(x) {
+  // Altura aleatoria del hueco
+  const minY = 80;
+  const maxY = H - CONFIG.sueloAlto - CONFIG.hueco - 80;
+  const huecoY = Math.random() * (maxY - minY) + minY;
+  return { x: x, huecoY: huecoY, paso: false };
+}
+
+// =====================================================
+//  ★★★  SONIDOS (generados por código, sin archivos) ★★★
+//  Si quieres cambiarlos, toca las frecuencias de abajo.
+// =====================================================
+let audioCtx = null;
+
+function audio() {
+  // Crea el contexto de audio la primera vez (los navegadores
+  // exigen que sea después de que el jugador toque algo)
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
+}
+
+// Rebote estilo pelota de tenis: golpe corto y grave ("thock")
+function sonidoRebote() {
+  const ac = audio();
+  const t = ac.currentTime;
+  const osc = ac.createOscillator();
+  const gain = ac.createGain();
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(340, t);                    // ★ tono inicial
+  osc.frequency.exponentialRampToValueAtTime(130, t + 0.09); // ★ cae a tono grave
+  gain.gain.setValueAtTime(0.5, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);  // se apaga rápido
+  osc.connect(gain);
+  gain.connect(ac.destination);
+  osc.start(t);
+  osc.stop(t + 0.13);
+}
+
+// Punto al pasar un obstáculo: "ding" alegre de dos notas
+function sonidoPunto() {
+  const ac = audio();
+  nota(ac, 660, 0, 0.09);      // ★ primera nota (Mi)
+  nota(ac, 880, 0.09, 0.16);   // ★ segunda nota (La)
+}
+
+// Una nota simple (la usa sonidoPunto)
+function nota(ac, frecuencia, espera, duracion) {
+  const t = ac.currentTime + espera;
+  const osc = ac.createOscillator();
+  const gain = ac.createGain();
+  osc.type = "sine";
+  osc.frequency.value = frecuencia;
+  gain.gain.setValueAtTime(0.35, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duracion);
+  osc.connect(gain);
+  gain.connect(ac.destination);
+  osc.start(t);
+  osc.stop(t + duracion + 0.02);
+}
+// =====================================================
+
+
+// --- Física ---
+function actualizar() {
+  if (estado === "jugando") {
+    // Pelota: cae por gravedad
+    pelota.vel += CONFIG.gravedad;
+    pelota.y += pelota.vel;
+
+    // Edificios: se mueven a la izquierda
+    for (const e of edificios) {
+      e.x -= CONFIG.velocidad;
+
+      // Sumar punto al pasar el edificio
+      if (!e.paso && e.x + CONFIG.edificioAncho < pelota.x) {
+        e.paso = true;
+        puntos++;
+        sonidoPunto();  // ★ suena al pasar el obstáculo
+
+        // ¿Llegó a la meta? → pantalla de victoria (salvo modo infinito)
+        if (!modoInfinito && puntos >= CONFIG.meta) {
+          estado = "victoria";
+        }
+      }
+    }
+
+    // Agregar edificio nuevo / borrar el que salió
+    const ultimo = edificios[edificios.length - 1];
+    if (ultimo.x < W - CONFIG.edificioEspacio) {
+      edificios.push(nuevoEdificio(W));
+    }
+    if (edificios[0].x + CONFIG.edificioAncho < 0) {
+      edificios.shift();
+    }
+
+    // ¿Chocó? → fin del juego
+    if (hayChoque()) {
+      estado = "fin";
+    }
+  }
+}
+
+function hayChoque() {
+  const r = CONFIG.pelotaRadio;
+
+  // Toca el suelo o el techo
+  if (pelota.y + r >= H - CONFIG.sueloAlto) return true;
+  if (pelota.y - r <= 0) return true;
+
+  // Toca un edificio
+  for (const e of edificios) {
+    const dentroX = pelota.x + r > e.x && pelota.x - r < e.x + CONFIG.edificioAncho;
+    const fueraHueco = pelota.y - r < e.huecoY || pelota.y + r > e.huecoY + CONFIG.hueco;
+    if (dentroX && fueraHueco) return true;
+  }
+  return false;
+}
+
+// --- Dibujo ---
+function dibujar() {
+  // Fondo (cielo)
+  ctx.fillStyle = CONFIG.colorFondo;
+  ctx.fillRect(0, 0, W, H);
+
+  // Edificios (uno arriba y uno abajo, con un hueco en el medio)
+  for (const e of edificios) {
+    // Edificio de arriba (cuelga desde el techo)
+    dibujarEdificio(e.x, 0, CONFIG.edificioAncho, e.huecoY, "abajo");
+    // Edificio de abajo (sube desde el suelo)
+    const abajoY = e.huecoY + CONFIG.hueco;
+    dibujarEdificio(e.x, abajoY, CONFIG.edificioAncho, H - abajoY - CONFIG.sueloAlto, "arriba");
+  }
+
+  // Suelo
+  ctx.fillStyle = CONFIG.colorSuelo;
+  ctx.fillRect(0, H - CONFIG.sueloAlto, W, CONFIG.sueloAlto);
+  ctx.fillStyle = CONFIG.colorBorde;
+  ctx.fillRect(0, H - CONFIG.sueloAlto, W, 3);  // línea superior del suelo
+
+  // Pelota: dibuja la imagen de tenis (y un círculo simple
+  // como respaldo mientras la imagen termina de cargar)
+  const r = CONFIG.pelotaRadio;
+  if (imgPelota.complete && imgPelota.naturalWidth > 0) {
+    ctx.drawImage(imgPelota, pelota.x - r, pelota.y - r, r * 2, r * 2);
+  } else {
+    ctx.fillStyle = CONFIG.colorPelota;
+    ctx.beginPath();
+    ctx.arc(pelota.x, pelota.y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Puntaje
+  ctx.fillStyle = CONFIG.colorTexto;
+  ctx.textAlign = "center";
+  ctx.font = "bold 40px Arial";
+  ctx.fillText(puntos, W / 2, 60);
+  // Progreso hacia la meta (si no es modo infinito)
+  if (!modoInfinito && (estado === "jugando" || estado === "inicio")) {
+    ctx.font = "16px Arial";
+    ctx.fillText("META: " + CONFIG.meta, W / 2, 85);
+  }
+  if (modoInfinito) {
+    ctx.font = "16px Arial";
+    ctx.fillText("MODO INFINITO", W / 2, 85);
+  }
+
+  // Pantallas de mensajes
+  if (estado === "inicio") {
+    ctx.font = "bold 32px Arial";
+    ctx.fillText("CANIS MUNDANA", W / 2, H / 2 - 30);
+    ctx.font = "18px Arial";
+    ctx.fillText("Toca o pulsa ESPACIO", W / 2, H / 2 + 10);
+    ctx.fillText("para empezar", W / 2, H / 2 + 35);
+  } else if (estado === "fin") {
+    ctx.font = "bold 24px Arial";
+    ctx.fillText("¡Perdiste! Puntos: " + puntos, W / 2, H / 2 - 15);
+    ctx.font = "18px Arial";
+    ctx.fillText("Toca para jugar de nuevo", W / 2, H / 2 + 15);
+  } else if (estado === "victoria") {
+    dibujarVictoria();
+  }
+}
+
+// Dibuja UN edificio con ventanas.
+// ladoHueco = "abajo" si el hueco está debajo (edificio de arriba),
+//             "arriba" si el hueco está encima (edificio de abajo).
+function dibujarEdificio(x, y, w, h, ladoHueco) {
+  // Cuerpo del edificio
+  ctx.fillStyle = CONFIG.colorEdificio;
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = CONFIG.colorBorde;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(x, y, w, h);
+
+  // Ventanas: cuadraditos oscuros en filas y columnas
+  // ★ Puedes cambiar ventW / ventH para ventanas más grandes o chicas
+  ctx.fillStyle = CONFIG.colorBorde;
+  const ventW = 12, ventH = 14;
+  for (let wy = y + 10; wy + ventH <= y + h - 8; wy += 26) {
+    for (let wx = x + 9; wx + ventW <= x + w - 6; wx += 24) {
+      ctx.fillRect(wx, wy, ventW, ventH);
+    }
+  }
+
+  // Techo: franja oscura del lado del hueco (marca bien la abertura)
+  ctx.fillStyle = CONFIG.colorBorde;
+  if (ladoHueco === "abajo") {
+    ctx.fillRect(x, y + h - 6, w, 6);   // borde inferior
+  } else {
+    ctx.fillRect(x, y, w, 6);           // borde superior
+  }
+}
+
+function dibujarVictoria() {
+  // Panel
+  ctx.fillStyle = CONFIG.colorFondo;
+  ctx.strokeStyle = CONFIG.colorBorde;
+  ctx.lineWidth = 4;
+  ctx.fillRect(40, 180, 320, 300);
+  ctx.strokeRect(40, 180, 320, 300);
+
+  // Textos
+  ctx.fillStyle = CONFIG.colorTexto;
+  ctx.textAlign = "center";
+  ctx.font = "bold 36px Arial";
+  ctx.fillText("¡VICTORIA!", W / 2, 240);
+  ctx.font = "18px Arial";
+  ctx.fillText("Pasaste " + CONFIG.meta + " obstáculos", W / 2, 275);
+  ctx.fillText("¿Qué quieres hacer?", W / 2, 300);
+
+  // Botones
+  dibujarBoton(BTN_CONTINUAR, "CONTINUAR (∞)");
+  dibujarBoton(BTN_REINTENTAR, "REINTENTAR");
+}
+
+function dibujarBoton(b, texto) {
+  ctx.fillStyle = CONFIG.colorBorde;   // botón oscuro
+  ctx.fillRect(b.x, b.y, b.w, b.h);
+  ctx.fillStyle = CONFIG.colorFondo;   // texto claro
+  ctx.font = "bold 20px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(texto, b.x + b.w / 2, b.y + 33);
+}
+
+// ¿El clic (x, y) cayó dentro del botón?
+function clicEnBoton(b, x, y) {
+  return x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h;
+}
+
+// --- Controles ---
+function saltar() {
+  pelota.vel = CONFIG.salto;
+  sonidoRebote();  // ★ suena cada vez que la pelota rebota
+}
+
+function accion(x, y) {
+  if (estado === "inicio") {
+    estado = "jugando";
+    saltar();
+  } else if (estado === "jugando") {
+    saltar();
+  } else if (estado === "fin") {
+    reiniciar();                // empezar de nuevo
+    estado = "jugando";
+  } else if (estado === "victoria") {
+    if (x === undefined) {
+      continuarInfinito();      // tecla: continuar por defecto
+    } else if (clicEnBoton(BTN_CONTINUAR, x, y)) {
+      continuarInfinito();
+    } else if (clicEnBoton(BTN_REINTENTAR, x, y)) {
+      reiniciar();
+      estado = "jugando";
+    }
+    // (clic fuera de los botones = no hace nada)
+  }
+}
+
+function continuarInfinito() {
+  modoInfinito = true;
+  estado = "jugando";
+}
+
+// Convertir clic táctil/ratón a coordenadas del canvas
+function coordsCanvas(e) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = e.touches ? e.touches[0].clientX : e.clientX;
+  const cy = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: (cx - rect.left) * (canvas.width / rect.width),
+    y: (cy - rect.top) * (canvas.height / rect.height),
+  };
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space" || e.code === "Enter") { e.preventDefault(); accion(); }
+  if (e.code === "KeyR" && (estado === "fin" || estado === "victoria")) {
+    reiniciar();
+    estado = "jugando";
+  }
+});
+canvas.addEventListener("mousedown", (e) => {
+  const p = coordsCanvas(e);
+  accion(p.x, p.y);
+});
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  const p = coordsCanvas(e);
+  accion(p.x, p.y);
+});
+
+// --- Bucle principal ---
+function bucle() {
+  actualizar();
+  dibujar();
+  requestAnimationFrame(bucle);
+}
+
+reiniciar();
+bucle();
+</script>
+
+</body>
+</html>
