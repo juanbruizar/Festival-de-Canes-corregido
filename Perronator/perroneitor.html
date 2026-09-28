@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perroneitor 🛸</title>
+<style>
+/* ================================================================
+   🎨 PERSONALIZÁ LO VISUAL ACÁ
+   Cambiá colores, tamaños y fuentes tocando estos valores:
+   ================================================================ */
+:root {
+  /* La imagen de fondo se elige abajo, en "#juego" */
+  --color-lluvia:       rgba(200, 215, 230, 0.55); /* las gotas */
+  --color-laser:        #ff1744;   /* color del disparo láser        */
+  --color-texto:        #ffffff;   /* texto del marcador             */
+  --color-cartel:       #222222;   /* fondo de las pantallas         */
+  --tamano-dron:        96px;      /* tamaño del dron                */
+  --tamano-hud:         22px;      /* tamaño de letra del marcador   */
+  --fuente: "Courier New", monospace; /* fuente retro                */
+}
+
+/* ---- No hace falta tocar nada debajo de esta línea ---- */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+
+#juego {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #97a1ab url("fondo.jpg") center / cover no-repeat;
+  cursor: crosshair; /* la mira para apuntar */
+  font-family: var(--fuente);
+  user-select: none;
+  overflow: hidden;
+}
+
+/* Suelo: ahora lo dibuja la imagen de fondo (fondo.jpg) */
+
+/* Gotas de lluvia (podés borrar estas 2 reglas para sacar la lluvia) */
+.gota {
+  position: absolute;
+  top: -25px;
+  width: 2px;
+  height: 18px;
+  background: var(--color-lluvia);
+  border-radius: 2px;
+  animation: caer-lluvia linear infinite;
+  pointer-events: none;
+}
+@keyframes caer-lluvia {
+  to { transform: translateY(115vh); }
+}
+
+/* El dron */
+.dron {
+  position: absolute;
+  font-size: var(--tamano-dron);
+  line-height: 1;
+  will-change: transform;
+}
+.dron img {
+  width: var(--tamano-dron);
+  height: auto;
+  image-rendering: pixelated; /* mantiene nítido el pixel art */
+}
+
+/* Dron raro: brillo verde para distinguirlo */
+.dron.raro { filter: drop-shadow(0 0 8px #00e676); }
+
+/* Texto flotante "+3 DISPAROS" al derribar al dron raro */
+.bonus {
+  position: absolute;
+  font-size: 22px;
+  font-weight: bold;
+  color: #00e676;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.7);
+  pointer-events: none;
+  animation: subir-bonus 0.9s forwards;
+}
+@keyframes subir-bonus {
+  to { transform: translateY(-70px); opacity: 0; }
+}
+
+/* Marcador de arriba */
+#hud {
+  position: absolute; top: 0; left: 0; width: 100%;
+  display: flex; justify-content: space-around;
+  padding: 12px;
+  font-size: var(--tamano-hud);
+  color: var(--color-texto);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+/* Dron chiquito del marcador */
+.icono-dron {
+  width: 30px;
+  height: auto;
+  vertical-align: middle;
+  image-rendering: pixelated;
+}
+
+/* Destello rojo del impacto */
+.flash {
+  position: absolute;
+  width: 30px; height: 30px;
+  margin: -15px 0 0 -15px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 15%, var(--color-laser) 45%, transparent 70%);
+  box-shadow: 0 0 20px var(--color-laser);
+  pointer-events: none;
+}
+
+/* Rayo láser: sale desde abajo (donde estaría el jugador) hasta el clic */
+.laser {
+  position: absolute;
+  height: 4px;
+  margin-top: -2px;
+  background: linear-gradient(90deg, var(--color-laser), #ff8a80);
+  box-shadow: 0 0 8px 2px var(--color-laser);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Pantallas de inicio y fin */
+.pantalla {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 20px;
+  background: rgba(0,0,0,0.55);
+  color: var(--color-texto);
+  text-align: center;
+}
+.pantalla h1 { font-size: 48px; text-shadow: 3px 3px 0 rgba(0,0,0,0.6); }
+.pantalla p  { font-size: 24px; }
+
+/* Logo de la pantalla de inicio (imagen) */
+.logo {
+  width: min(85vw, 700px);   /* tamaño máximo del logo */
+  height: auto;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.6));
+}
+.pantalla button {
+  font-family: var(--fuente);
+  font-size: 24px;
+  padding: 12px 32px;
+  background: var(--color-cartel);
+  color: var(--color-texto);
+  border: 3px solid var(--color-texto);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.pantalla button:hover { background: #000; }
+.oculto { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="juego">
+  <!-- Marcador -->
+  <div id="hud">
+    <span>⭐ PUNTOS: <b id="hud-puntos">0</b></span>
+    <span><img class="icono-dron" src="dron.png" alt=""> DRONES: <b id="hud-drones">0</b></span>
+    <span>🔴 DISPAROS: <b id="hud-disparos">0</b></span>
+  </div>
+
+  <!-- Pantalla de inicio -->
+  <div id="pantalla-inicio" class="pantalla">
+    <img class="logo" src="titulo.png" alt="Perroneitor: la noche del ladrido final">
+    <p>Hacé clic para derribar los drones. ¡No desperdicies disparos!</p>
+    <button id="btn-jugar">▶ JUGAR</button>
+  </div>
+
+  <!-- Pantalla de fin -->
+  <div id="pantalla-fin" class="pantalla oculto">
+    <h1>GAME OVER</h1>
+    <p>Puntos: <b id="fin-puntos">0</b> — Drones: <b id="fin-drones">0</b></p>
+    <button id="btn-reiniciar">↻ JUGAR DE NUEVO</button>
+  </div>
+
+  <!-- Pantalla de victoria -->
+  <div id="pantalla-victoria" class="pantalla oculto">
+    <h1>🏆 ¡VICTORIA!</h1>
+    <p>Llegaste a <b id="vic-puntos">0</b> puntos y salvaste la ciudad.</p>
+    <button id="btn-reintentar">↻ REINTENTAR</button>
+    <button id="btn-infinito">∞ MODO INFINITO</button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   🕹️ PERSONALIZÁ EL COMPORTAMIENTO ACÁ
+   ================================================================ */
+const CONFIG = {
+  /* Aspecto del dron. Podés usar cualquier emoji ("🛸","🚁","👾")
+     o una imagen propia, por ejemplo:
+     dron: '<img src="mi-dron.png">'                            */
+  dron: '<img src="dron.png">',
+  dron2: '<img src="dron2.png">',
+
+  chanceDron2: 0.15,         /* prob. de que aparezca el dron raro (0.15 = 15%) */
+  disparosExtraDron2: 3,     /* disparos que regalás al derribar al dron raro  */
+  puntosPorDron2: 250,       /* puntos que vale el dron raro                   */
+  puntosVictoria: 1500,      /* puntos necesarios para ganar                   */
+
+  disparos: 10,              /* disparos por partida              */
+  velocidadBase: 2.5,        /* velocidad de vuelo de los drones  */
+  aparicionCada: 1400,       /* ms entre dron y dron              */
+  maxDronesEnPantalla: 3,    /* drones volando al mismo tiempo    */
+  puntosPorDron: 100,        /* puntos al acertarle               */
+  velocidadCaida: 6,         /* qué tan rápido cae al ser derribado */
+  sonidoActivado: true,      /* ponelo en false para silenciar    */
+  gotasDeLluvia: 60,         /* cantidad de gotas (0 = sin lluvia)  */
+};
+
+/* ---- No hace falta tocar nada debajo de esta línea ---- */
+
+const juego = document.getElementById("juego");
+const hudPuntos    = document.getElementById("hud-puntos");
+const hudDrones    = document.getElementById("hud-drones");
+const hudDisparos  = document.getElementById("hud-disparos");
+const pantallaInicio = document.getElementById("pantalla-inicio");
+const pantallaFin    = document.getElementById("pantalla-fin");
+const pantallaVictoria = document.getElementById("pantalla-victoria");
+
+let drones = [];         // drones en pantalla
+let puntos = 0;
+let dronesCazados = 0;
+let disparos = 0;
+let jugando = false;
+let modoInfinito = false;
+let temporizadorAparicion = null;
+let audioCtx = null;
+
+/* ---------- Sonido simple de disparo (sin archivos) ---------- */
+function sonidoDisparo() {
+  if (!CONFIG.sonidoActivado) return;
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = "square";
+  o.frequency.value = 180;
+  g.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + 0.15);
+}
+
+/* ---------- Dibujar el rayo láser desde el jugador hasta el clic ---------- */
+function dibujarLaser(x, y) {
+  const origenX = window.innerWidth / 2;   // el jugador está abajo, al centro
+  const origenY = window.innerHeight;
+  const largo  = Math.hypot(x - origenX, y - origenY);
+  const angulo = Math.atan2(y - origenY, x - origenX) * 180 / Math.PI;
+
+  const laser = document.createElement("div");
+  laser.className = "laser";
+  laser.style.width = largo + "px";
+  laser.style.left  = origenX + "px";
+  laser.style.top   = origenY + "px";
+  laser.style.transformOrigin = "0 50%";
+  laser.style.transform = `rotate(${angulo}deg)`;
+  juego.appendChild(laser);
+  setTimeout(() => laser.remove(), 120);
+}
+
+/* ---------- Texto flotante de bonus ---------- */
+function mostrarBonus(x, y, texto) {
+  const b = document.createElement("div");
+  b.className = "bonus";
+  b.textContent = texto;
+  b.style.left = x + "px";
+  b.style.top  = y + "px";
+  juego.appendChild(b);
+  setTimeout(() => b.remove(), 900);
+}
+
+/* ---------- Crear un dron nuevo ---------- */
+function crearDron() {
+  if (!jugando || drones.length >= CONFIG.maxDronesEnPantalla) return;
+
+  const desdeLaIzquierda = Math.random() < 0.5;
+  const vel = CONFIG.velocidadBase + Math.random() * 1.5;
+  const esRaro = Math.random() < CONFIG.chanceDron2; // el dron raro aparece menos seguido
+
+  const dron = {
+    x: desdeLaIzquierda ? -80 : window.innerWidth + 80,
+    y: 60 + Math.random() * (window.innerHeight * 0.55),
+    vx: desdeLaIzquierda ? vel : -vel,
+    vy: (Math.random() - 0.5) * 1.5,
+    fase: Math.random() * Math.PI * 2,   // para el movimiento ondulado
+    rot: 0,
+    cayo: false,
+    raro: esRaro,
+  };
+
+  const el = document.createElement("div");
+  el.className = "dron" + (esRaro ? " raro" : "");
+  el.innerHTML = esRaro ? CONFIG.dron2 : CONFIG.dron;
+  juego.appendChild(el);
+  dron.el = el;
+  el._dron = dron;   // referencia para saber qué dron tocamos
+  drones.push(dron);
+}
+
+/* ---------- Bucle principal ---------- */
+function bucle() {
+  for (let i = drones.length - 1; i >= 0; i--) {
+    const d = drones[i];
+
+    if (d.cayo) {
+      // Cae dando vueltas
+      d.y += CONFIG.velocidadCaida;
+      d.rot += 12;
+      if (d.y > window.innerHeight + 100) { sacarDron(i); continue; }
+    } else {
+      // Vuela con una pequeña ondulación
+      d.fase += 0.1;
+      d.x += d.vx;
+      d.y += d.vy + Math.sin(d.fase) * 1.5;
+
+      // Se escapó por los bordes → lo sacamos
+      if ((d.vx > 0 && d.x > window.innerWidth + 100) ||
+          (d.vx < 0 && d.x < -100)) { sacarDron(i); continue; }
+    }
+
+    // Dibujar: si vuela a la izquierda, lo "damos vuelta"
+    const escala = (!d.cayo && d.vx < 0) ? "scaleX(-1)" : "";
+    d.el.style.transform =
+      `translate(${d.x}px, ${d.y}px) rotate(${d.rot}deg) ${escala}`;
+  }
+  requestAnimationFrame(bucle);
+}
+
+function sacarDron(indice) {
+  drones[indice].el.remove();
+  drones.splice(indice, 1);
+}
+
+/* ---------- Disparar ---------- */
+function disparar(e) {
+  if (!jugando || disparos <= 0) return;
+  if (e.target.closest(".pantalla")) return;
+
+  disparos--;
+  sonidoDisparo();
+  dibujarLaser(e.clientX, e.clientY);
+
+  // Destello rojo donde hiciste clic
+  const flash = document.createElement("div");
+  flash.className = "flash";
+  flash.style.left = e.clientX + "px";
+  flash.style.top  = e.clientY + "px";
+  juego.appendChild(flash);
+  setTimeout(() => flash.remove(), 120);
+
+  // ¿Le acertamos a un dron?
+  const elDron = e.target.closest(".dron");
+  if (elDron && elDron._dron && !elDron._dron.cayo) {
+    const d = elDron._dron;
+    d.cayo = true;
+    d.vx = 0;
+    d.vy = 0;
+    dronesCazados++;
+
+    if (d.raro) {
+      // El dron raro regala disparos extra
+      puntos += CONFIG.puntosPorDron2;
+      disparos += CONFIG.disparosExtraDron2;
+      mostrarBonus(e.clientX, e.clientY, "+" + CONFIG.disparosExtraDron2 + " DISPAROS");
+    } else {
+      puntos += CONFIG.puntosPorDron;
+    }
+  }
+
+  actualizarHUD();
+
+  // ¿Ganamos?
+  if (!modoInfinito && puntos >= CONFIG.puntosVictoria) {
+    setTimeout(mostrarVictoria, 500);
+    return;
+  }
+
+  // Sin disparos → fin del juego (damos un segundo para ver caer al último dron)
+  if (disparos === 0) setTimeout(finDelJuego, 800);
+}
+
+/* ---------- HUD ---------- */
+function actualizarHUD() {
+  hudPuntos.textContent   = puntos;
+  hudDrones.textContent   = dronesCazados;
+  hudDisparos.textContent = disparos;
+}
+
+/* ---------- Inicio y fin ---------- */
+function empezar() {
+  puntos = 0; dronesCazados = 0; disparos = CONFIG.disparos;
+  modoInfinito = false;
+  drones.forEach(d => d.el.remove());
+  drones = [];
+  jugando = true;
+
+  pantallaInicio.classList.add("oculto");
+  pantallaFin.classList.add("oculto");
+  actualizarHUD();
+
+  crearDron(); // el primero aparece enseguida
+  temporizadorAparicion = setInterval(crearDron, CONFIG.aparicionCada);
+}
+
+function finDelJuego() {
+  if (!jugando) return;
+  jugando = false;
+  clearInterval(temporizadorAparicion);
+  document.getElementById("fin-puntos").textContent = puntos;
+  document.getElementById("fin-drones").textContent = dronesCazados;
+  pantallaFin.classList.remove("oculto");
+}
+
+/* ---------- Crear la lluvia ---------- */
+for (let i = 0; i < CONFIG.gotasDeLluvia; i++) {
+  const gota = document.createElement("div");
+  gota.className = "gota";
+  gota.style.left = Math.random() * 100 + "%";
+  gota.style.animationDuration = (0.5 + Math.random() * 0.5) + "s"; // cada gota cae a su ritmo
+  gota.style.animationDelay = (-Math.random()) + "s";               // arrancan ya en el aire
+  juego.appendChild(gota);
+}
+
+/* ---------- Victoria y modo infinito ---------- */
+function mostrarVictoria() {
+  if (!jugando) return;
+  jugando = false;
+  clearInterval(temporizadorAparicion);
+  document.getElementById("vic-puntos").textContent = puntos;
+  pantallaVictoria.classList.remove("oculto");
+}
+
+function continuarInfinito() {
+  modoInfinito = true;         // ya no hay victoria: se juega por puntaje
+  disparos = CONFIG.disparos;  // te dan 10 disparos nuevos
+  jugando = true;
+  pantallaVictoria.classList.add("oculto");
+  actualizarHUD();
+  temporizadorAparicion = setInterval(crearDron, CONFIG.aparicionCada);
+}
+
+/* ---------- Eventos ---------- */
+document.getElementById("btn-jugar").addEventListener("click", empezar);
+document.getElementById("btn-reiniciar").addEventListener("click", empezar);
+document.getElementById("btn-reintentar").addEventListener("click", empezar);
+document.getElementById("btn-infinito").addEventListener("click", continuarInfinito);
+juego.addEventListener("mousedown", disparar);
+
+requestAnimationFrame(bucle);
+</script>
+</body>
+</html>
