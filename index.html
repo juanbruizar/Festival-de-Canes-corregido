@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dog">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Festival de Canes —| La Alfombra Azul</title>
+<style>
+  /* === SISTEMA TIPOGRÁFICO PEDIDO === */
+  @import url('https://fonts.googleapis.com/css2?family=Gorditas:wght@400;700;900&family=Space+Grotesk:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.cdnfonts.com/css/futura-pt');
+  @import url('https://fonts.cdnfonts.com/css/ts-tarek');
+  :root{
+    --bg: #201a0d;
+    --bg-soft: #2e2414;
+    --bg-card: #3a2e1a;
+    --bg-card-2: #42361f;
+    --line: #f2cc0f;
+    --line-soft: rgba(242,204,15,0.35);
+    --gold: #f7d40e;
+    --gold-2: #ffea7a;
+    --gold-muted: #c9b44a;
+    --blue: #1e33ff;
+    --blue-soft: #2a3dff;
+    --blue-dark: #1220b3;
+    --text: #fff7c2;
+    --text-muted: #d8c87a;
+    --text-dark: #2e2414;
+    --red-cinema: #7a0f14;
+    --shadow: 0 18px 40px rgba(0,0,0,0.45);
+    --font-festival: 'Gorditas', 'Cooper Black', 'Fredoka One', cursive;
+    --font-titulo: 'TS Tarek', 'Space Grotesk', 'Jost', 'Montserrat', sans-serif;
+    --font-texto: 'Futura PT', 'Futura', 'Jost', 'Century Gothic', sans-serif;
+  }
+  [data-theme="human"]{
+    --bg: #160506;
+    --bg-soft: #2b080b;
+    --bg-card: #5a0c12;
+    --bg-card-2: #7a1118;
+    --line: #e8c67d;
+    --line-soft: rgba(232,198,125,0.35);
+    --gold: #f5d78e;
+    --gold-2: #fff1c7;
+    --gold-muted: #d9b77a;
+    --blue: #c9a86a;
+    --blue-soft: #8b1014;
+    --blue-dark: #4a070b;
+    --text: #fff6e0;
+    --text-muted: #e6c9a8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-texto);
+    font-weight: 400;
+    letter-spacing: .01em;
+    overflow-x:hidden;
+    transition: background .4s ease, color .4s ease;
+  }
+  .font-festival{font-family: var(--font-festival); font-weight:900; letter-spacing:-.02em; text-transform:uppercase; line-height:.9}
+  .font-titulo{font-family: var(--font-titulo); font-weight:700; letter-spacing:-.02em; text-transform:uppercase}
+  h2,h3,h4{font-family: var(--font-titulo); font-weight:700; letter-spacing:-.01em}
+  p, li, span, a, label, input, select, textarea, small, strong{font-family: var(--font-texto)}
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none; opacity:.5; z-index:9999;
+  }
+  a{color:inherit; text-decoration:none}
+  nav{
+    position:sticky; top:0; z-index:50;
+    background: rgba(32,26,13,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line-soft);
+    transition: background .4s ease, border-color .4s ease;
+  }
+  [data-theme="human"] nav{ background: rgba(22,5,6,0.92); }
+  .nav-inner{
+    max-width:1280px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; gap:20px;
+  }
+  .logo{display:flex; align-items:center; gap:12px; letter-spacing:.04em}
+  .logo-mark{
+    width:44px; height:44px; border-radius:8px;
+    background: var(--gold); display:grid; place-items:center;
+    border:2px solid var(--gold); color: var(--text-dark);
+    flex-shrink:0; transition: background .4s, border-color .4s;
+    overflow:hidden; padding:0;
+  }
+  .logo-mark img{width:100%; height:100%; object-fit:cover; display:block}
+  [data-theme="human"] .logo-mark{ background: var(--gold); border-color: var(--gold); }
+  .logo-text{line-height:1}
+  .logo-text strong{font-size:22px; color:var(--gold); display:block; font-weight:900; letter-spacing:.01em; line-height:.9}
+  .logo-text strong .festival-word{font-family: var(--font-festival); font-weight:900; font-size:1.05em; letter-spacing:-.03em; color:var(--gold)}
+  .logo-text strong .rest-word{font-family: var(--font-titulo); font-weight:700; letter-spacing:.04em}
+  .logo-text span{font-size:10px; letter-spacing:.28em; color:var(--text-muted); font-family:var(--font-texto); font-weight:600; text-transform:uppercase}
+  .nav-links{display:flex; gap:22px; align-items:center; font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase}
+  .nav-links a{color:var(--text-muted); transition:.2s; position:relative; padding:6px 0}
+  .nav-links a::after{content:""; position:absolute; left:0; bottom:0; width:0; height:2px; background:var(--gold); transition:.25s}
+  .nav-links a:hover{color:var(--gold)} .nav-links a:hover::after{width:100%}
+  .nav-actions{display:flex; align-items:center; gap:14px}
+  /* === NUEVO SWITCH HUELLA / HUMANO === */
+  .theme-switch-wrap{
+    display:flex; align-items:center; gap:8px;
+    background: rgba(0,0,0,.18); border:1px solid var(--line-soft);
+    padding:6px 10px 6px 8px; border-radius:999px; backdrop-filter:blur(6px);
+  }
+  [data-theme="human"] .theme-switch-wrap{ background: rgba(0,0,0,.22)}
+  .switch-icon{
+    width:26px; height:26px; border-radius:50%; display:grid; place-items:center;
+    font-size:15px; transition:.3s; opacity:.45; filter:grayscale(.2);
+  }
+  .switch-icon.active{ opacity:1; background: var(--gold); color: var(--text-dark); filter:none; transform:scale(1.06); box-shadow:0 2px 8px rgba(0,0,0,.2)}
+  .switch-icon.paw.active{ background: var(--gold)}
+  .switch-icon.human.active{ background: var(--gold)}
+  .switch-track{
+    width:58px; height:30px; background: var(--bg-card); border:1.5px solid var(--line-soft);
+    border-radius:999px; position:relative; cursor:pointer; transition:.35s; flex-shrink:0;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,.25);
+  }
+  .switch-thumb{
+    position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%;
+    background: var(--gold); display:grid; place-items:center; font-size:11px; color:var(--text-dark);
+    transition: transform .38s cubic-bezier(.4,0,.2,1), background .3s, color .3s;
+    box-shadow:0 2px 7px rgba(0,0,0,.28); font-weight:900;
+  }
+  [data-theme="human"] .switch-thumb{ transform: translateX(28px); background: var(--gold); }
+  .switch-label{
+    font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold);
+    min-width:92px; text-align:left; line-height:1.1;
+  }
+  .switch-label small{display:block; font-size:8px; letter-spacing:.14em; opacity:.7; font-weight:600; margin-top:1px}
+  .btn-ticket{
+    background: var(--blue); color:white; border:1px solid var(--blue);
+    padding:10px 18px; border-radius:999px; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; transition:.2s
+  }
+  [data-theme="human"] .btn-ticket{ background: var(--gold); color:#3a0a0d; border-color: var(--gold)}
+  .btn-ticket:hover{filter:brightness(1.1); transform:translateY(-1px)}
+  .mobile-toggle{display:none; background:none; border:1px solid var(--line-soft); color:var(--gold); width:42px; height:42px; border-radius:10px; cursor:pointer; place-items:center; font-size:18px}
+  /* HERO */
+  .hero{
+    max-width:1280px; margin:0 auto; padding:28px 24px 0;
+    display:grid; grid-template-columns: 1.35fr .85fr; gap:0;
+    border: 1px solid var(--line-soft); border-top:none; overflow:hidden;
+    background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+  }
+  .hero-left{padding:42px 38px 36px; border-right:1px solid var(--line-soft); display:flex; flex-direction:column; gap:22px}
+  .eyebrow{display:inline-flex; align-items:center; gap:10px; font-size:11px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--gold)}
+  .eyebrow::before{content:""; width:28px; height:1px; background:var(--gold)}
+  h1{
+    font-family: var(--font-titulo); font-weight:700; line-height:.9;
+    font-size: clamp(38px, 5.2vw, 62px); color:var(--gold);
+    text-transform:uppercase; letter-spacing:-.02em;
+  }
+  h1 .festival-word{
+    font-family: var(--font-festival); font-weight:900; font-size:1.08em; letter-spacing:-.03em; color: var(--gold); display:inline-block; transform: translateY(2px);
+  }
+  h1 em{font-family: var(--font-titulo); font-weight:600; color:var(--text); display:block; font-size:.62em; letter-spacing:.04em; margin-top:8px; text-transform:uppercase; opacity:.95}
+  .hero-desc{color:var(--text-muted); font-size:15px; line-height:1.7; max-width:560px}
+  .hero-meta{display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-top:6px}
+  .meta-card{background: var(--bg-card); border:1px solid var(--line-soft); border-radius:14px; padding:16px 14px; transition: background .4s, border-color .4s}
+  .meta-card strong{display:block; color:var(--gold); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:6px}
+  .meta-card span{font-size:14px; font-weight:600; line-height:1.3}
+  .meta-card small{display:block; font-size:12px; color:var(--text-muted); margin-top:4px}
+  .hero-ctas{display:flex; gap:12px; flex-wrap:wrap; margin-top:4px}
+  .btn-primary{
+    background:var(--gold); color:var(--text-dark); border:none; padding:14px 22px; border-radius:999px;
+    font-weight:800; font-size:13px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer;
+    display:inline-flex; align-items:center; gap:10px; transition:.2s; box-shadow:0 8px 22px rgba(242,204,15,.28)
+  }
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-ghost{
+    background:transparent; color:var(--gold); border:1.5px solid var(--gold); padding:13px 22px; border-radius:999px;
+    font-weight:700; font-size:13px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; transition:.2s
+  }
+  .btn-ghost:hover{background:var(--gold); color:var(--text-dark)}
+  .hero-right{
+    background: var(--blue); padding:32px 28px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; gap:18px; position:relative; overflow:hidden; transition: background .4s ease;
+  }
+  [data-theme="human"] .hero-right{ background: radial-gradient(120% 120% at 50% 0%, #8b1014 0%, #4a070b 55%, #1a0506 100%); }
+  .hero-right::before{content:""; position:absolute; inset:0; background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.08), transparent 60%); pointer-events:none}
+  .seal{
+    width:170px; height:170px; border-radius:18px;
+    background: var(--gold);
+    border:3px solid rgba(255,255,255,.9);
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    display:grid; place-items:center; position:relative; color: #111; transition: background .4s;
+    overflow:hidden; padding:0;
+  }
+  .seal img{width:100%; height:100%; object-fit:cover; display:block}
+  [data-theme="human"] .seal{ background: var(--gold); border-color: white; }
+  .seal-inner{ display:none }
+  .seal-dog{font-size:64px; line-height:1; filter: drop-shadow(0 2px 0 rgba(0,0,0,.15))}
+  .seal-text{font-family:var(--font-titulo); font-weight:700; font-size:24px; letter-spacing:.04em; margin-top:4px; color:inherit; text-transform:uppercase}
+  .seal-sub{font-size:8px; letter-spacing:.28em; text-transform:uppercase; font-weight:800; opacity:.8; margin-top:2px}
+  .hero-right h2{font-family:var(--font-titulo); font-weight:700; font-size:26px; color:white; position:relative; z-index:1; text-transform:uppercase; letter-spacing:.02em}
+  [data-theme="human"] .hero-right h2{ color: var(--gold) }
+  .hero-right p{font-size:12px; line-height:1.6; color: rgba(255,255,255,.85); max-width:320px; position:relative; z-index:1}
+  [data-theme="human"] .hero-right p{ color: rgba(255,241,199,.85)}
+  .hero-right .ritual{font-size:10px; letter-spacing:.32em; text-transform:uppercase; font-weight:800; color: var(--gold-2); border:1px solid rgba(255,255,255,.25); padding:6px 12px; border-radius:999px; background: rgba(0,0,0,.15)}
+  .section-wrap{max-width:1280px; margin:0 auto; padding:0 24px}
+  .section{
+    border-left:1px solid var(--line-soft); border-right:1px solid var(--line-soft);
+    border-bottom:1px solid var(--line-soft);
+    padding:42px 32px; background: var(--bg-soft); transition: background .4s, border-color .4s;
+  }
+  .section-alt{background: var(--bg); }
+  .section-header{display:flex; align-items:end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:26px}
+  .section-title{display:flex; align-items:center; gap:14px}
+  .section-title .icon{width:44px; height:44px; border-radius:50%; background: var(--bg-card); border:1px solid var(--line-soft); display:grid; place-items:center; color:var(--gold); font-size:18px; flex-shrink:0}
+  .section-title h2{font-family:var(--font-titulo); font-weight:700; letter-spacing:-.01em; font-size:30px; color:var(--gold); line-height:.95; text-transform:uppercase}
+  .section-title h2 span{ display:block; font-family:var(--font-texto); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--text-muted); font-weight:500; margin-top:6px}
+  .section-header p{max-width:520px; color:var(--text-muted); font-size:14px; line-height:1.6}
+  .link-more{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line-soft); padding:10px 16px; border-radius:999px; transition:.2s}
+  .link-more:hover{background:var(--gold); color:var(--text-dark)}
+  /* CARTELERA 10 */
+  .cartelera-grid{
+    display:grid; grid-template-columns: repeat(5,1fr); gap:16px;
+  }
+  .movie-card{
+    background: var(--bg-card); border:1px solid var(--line-soft); border-radius:16px; overflow:hidden;
+    display:flex; flex-direction:column; transition:.25s; position:relative;
+  }
+  .movie-card:hover{transform:translateY(-4px); box-shadow: var(--shadow); border-color: var(--line)}
+  .movie-poster{
+    height:280px; position:relative; overflow:hidden; padding:0;
+    display:flex; flex-direction:column; justify-content:space-between;
+    background: #0a0a0a;
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .movie-poster img.poster-img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; transition: transform .45s ease;
+  }
+  .movie-card:hover .movie-poster img.poster-img{ transform: scale(1.04) }
+  .movie-poster .top{position:relative; z-index:2; display:flex; justify-content:space-between; align-items:start; gap:8px; padding:12px 12px 0}
+  .movie-poster .poster-gradient{position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,.38) 0%, transparent 40%, rgba(0,0,0,.78) 100%); z-index:1; pointer-events:none}
+  .badge{font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; background: var(--gold); color:#201a0d; padding:5px 8px; border-radius:999px; line-height:1; white-space:nowrap}
+  .badge.blue{ background: var(--blue); color:white }
+  [data-theme="human"] .badge.blue{ background: #7a0f14; }
+  .badge.dark{ background: rgba(0,0,0,.55); color: #ffea7a; border:1px solid rgba(255,255,255,.2); backdrop-filter:blur(6px)}
+  .badge.pink{ background:#ff6b9d; color:white }
+  .badge.green{ background:#0a7a5c; color:white }
+  .badge.purple{ background:#7a3cff; color:white }
+  .movie-year{font-size:10px; font-weight:700; letter-spacing:.08em; color:rgba(255,255,255,.75); background:rgba(0,0,0,.28); padding:5px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.14)}
+  .poster-title{
+    font-family:var(--font-titulo); font-weight:700; font-size:22px; line-height:.92; color:white; letter-spacing:-.01em;
+    text-shadow: 0 3px 14px rgba(0,0,0,.45); text-transform:uppercase;
+  }
+  .poster-title small{display:block; font-family:var(--font-texto); font-size:10px; letter-spacing:.16em; text-transform:uppercase; opacity:.88; margin-top:5px; font-weight:600}
+  .movie-body{padding:14px 14px 14px; flex:1; display:flex; flex-direction:column; gap:8px}
+  .movie-body h3{font-size:14px; font-weight:800; line-height:1.25; color:var(--text)}
+  .movie-body h3 span{ color:var(--gold); font-weight:600; font-size:11px; display:block; margin-top:2px; letter-spacing:.03em; text-transform:uppercase}
+  .movie-meta{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; font-size:10px; color:var(--text-muted); font-weight:600}
+  .movie-meta i{width:3px; height:3px; background:var(--gold); border-radius:50%; display:inline-block}
+  .movie-desc{font-size:12px; line-height:1.55; color:var(--text-muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden}
+  .movie-actions{ display:flex; gap:8px; margin-top:auto; padding-top:10px}
+  .btn-sm{ flex:1; padding:9px 8px; border-radius:999px; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; text-align:center; transition:.2s; border:1.5px solid var(--line-soft)}
+  .btn-sm.primary{ background:var(--gold); color:var(--text-dark); border-color:var(--gold)}
+  .btn-sm.secondary{ background:transparent; color:var(--gold)}
+  .btn-sm:hover{transform:translateY(-1px); filter:brightness(1.05)}
+  /* posters especificos */
+  .p-amores{ background: radial-gradient(120% 90% at 20% 20%, #ff8fab 0%, #c9184a 42%, #4a0a14 100%) }
+  .p-bigotes{ background: radial-gradient(120% 90% at 50% 0%, #0a2a2a 0%, #0f4c4c 30%, #2b0a14 75%, #1a0506 100%) }
+  .p-perronator{ background: radial-gradient(120% 90% at 80% 20%, #ff3b30 0%, #7a0f14 45%, #1a0506 100%) }
+  .p-canis{ background: radial-gradient(120% 90% at 30% 30%, #ffea7a 0%, #d4a017 45%, #3a2e00 100%); color:#2e2414 }
+  .p-canis .poster-title{ color:#2e2414; text-shadow:none }
+  .p-scent{ background: radial-gradient(120% 90% at 50% 20%, #1e33ff 0%, #0a0f5c 50%, #05071a 100%) }
+  .p-puppy{ background: radial-gradient(120% 90% at 50% 0%, #ffd6e7 0%, #ff8fab 35%, #ffafcc 65%, #582630 100%) }
+  .p-pitbull{ background: linear-gradient(135deg, #2b2b2b 0%, #4a4a4a 25%, #f7d40e 26%, #2b2b2b 27%, #1a1a1a 100%) }
+  .p-pastores{ background: radial-gradient(120% 90% at 50% 20%, #d9b77a 0%, #8b5a2b 45%, #3a2314 100%) }
+  .p-huellas{ background: radial-gradient(120% 90% at 50% 10%, #2c3e50 0%, #1a252f 55%, #0a0f14 100%) }
+  .p-dogmurai{ background: radial-gradient(120% 90% at 50% 10%, #7a3cff 0%, #3a0a5c 50%, #0a0514 100%) }
+  /* ACTORES */
+  .people-grid{ display:grid; grid-template-columns: repeat(5,1fr); gap:14px}
+  .person-card{
+    background: var(--bg-card); border:1px solid var(--line-soft); border-radius:16px; overflow:hidden; text-align:center;
+    padding:16px 12px 14px; transition:.25s; position:relative;
+  }
+  .person-card:hover{transform:translateY(-3px); border-color:var(--line); box-shadow: var(--shadow)}
+  .person-avatar{
+    width:74px; height:74px; border-radius:50%; margin:0 auto 12px; display:grid; place-items:center;
+    font-size:30px; background: radial-gradient(circle at 30% 30%, var(--gold-2), var(--gold)); border:3px solid rgba(255,255,255,.15);
+    box-shadow: 0 6px 16px rgba(0,0,0,.25); position:relative; overflow:hidden;
+  }
+  .person-avatar img{width:100%; height:100%; object-fit:cover; display:block; border-radius:50%}
+  .director-avatar img{width:100%; height:100%; object-fit:cover; display:block; border-radius:12px}
+  .person-card h4{font-size:13px; font-weight:800; color:var(--text); line-height:1.2}
+  .person-card h4 em{ display:block; font-style:normal; font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--gold); margin-top:3px; font-family:var(--font-texto)}
+  .person-card .role{font-size:11px; color:var(--text-muted); margin-top:6px; line-height:1.45; display: -webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .person-card .tags{ display:flex; gap:5px; flex-wrap:wrap; justify-content:center; margin-top:9px}
+  .tag{font-size:9px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:4px 7px; border-radius:999px; background: rgba(242,204,15,.14); color:var(--gold); border:1px solid var(--line-soft)}
+  [data-theme="human"] .tag{ background: rgba(232,198,125,.14)}
+  /* DIRECTORES */
+  .directors-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:14px}
+  .director-card{
+    background: var(--bg-card); border:1px solid var(--line-soft); border-radius:16px; padding:18px; display:flex; gap:14px; align-items:start; transition:.25s
+  }
+  .director-card:hover{border-color:var(--line); transform:translateY(-2px); box-shadow:var(--shadow)}
+  .director-avatar{width:64px; height:64px; border-radius:12px; display:grid; place-items:center; font-size:26px; flex-shrink:0; background: var(--blue); color:white; border:2px solid var(--line-soft)}
+  [data-theme="human"] .director-avatar{ background: var(--bg-card-2); color:var(--gold)}
+  .director-card h4{font-size:14px; font-weight:800; line-height:1.1}
+  .director-card h4 span{display:block; font-family:var(--font-texto); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-top:3px; font-weight:600}
+  .director-card p{font-size:12px; line-height:1.6; color:var(--text-muted); margin-top:7px}
+  .director-films{display:flex; gap:5px; flex-wrap:wrap; margin-top:9px}
+  /* JUEGOS 4 */
+  .games-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:16px}
+  .game-card{
+    background: var(--bg-card); border:1px solid var(--line-soft); border-radius:16px; padding:22px 18px; text-align:center; position:relative; overflow:hidden; transition:.25s;
+    display:flex; flex-direction:column;
+  }
+  .game-card:hover{border-color:var(--line); transform:translateY(-3px); box-shadow: var(--shadow)}
+  .game-card.featured{ border-color: var(--gold); background: linear-gradient(180deg, var(--bg-card) 0%, rgba(242,204,15,0.06) 100%)}
+  .game-icon{
+    width:54px; height:54px; border-radius:14px; margin:0 auto 14px; display:grid; place-items:center; font-size:24px;
+    background: var(--bg); border:1px solid var(--line-soft); color:var(--gold)
+  }
+  .game-card h4{font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; line-height:1.2}
+  .game-card h4 small{display:block; font-family:var(--font-texto); font-size:10px; letter-spacing:.08em; color:var(--gold); margin-top:3px; font-weight:600; text-transform:uppercase}
+  .game-card p{font-size:12px; line-height:1.6; color:var(--text-muted); margin-top:8px; flex:1}
+  .game-status{
+    margin-top:14px; display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+    padding:7px 12px; border-radius:999px; background: rgba(242,204,15,.14); color:var(--gold); border:1px solid var(--line-soft); justify-content:center
+  }
+  .game-status.dot::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--gold); display:inline-block; animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1} 50%{opacity:.45}}
+  /* ENCUESTA QR */
+  .survey-qr-layout{ display:grid; grid-template-columns: 360px 1fr; gap:22px; align-items:stretch}
+  .qr-card{
+    background: white; border-radius:18px; padding:18px; display:flex; flex-direction:column; align-items:center; gap:12px;
+    border:3px solid var(--gold); box-shadow:0 12px 30px rgba(0,0,0,.2); text-align:center;
+  }
+  .qr-box{
+    width:220px; height:220px; background:white; border-radius:12px; overflow:hidden; position:relative;
+    border:1.5px solid #111; display:grid; place-items:center; padding:10px;
+  }
+  /* QR faux */
+  .qr-grid{
+    width:100%; height:100%; display:grid; grid-template-columns: repeat(7,1fr); grid-template-rows: repeat(7,1fr); gap:3px;
+  }
+  .qr-cell{ background:#111; border-radius:2px }
+  .qr-cell.w{ background:white; border:1px solid #111 }
+  .qr-cell.g{ background: var(--gold); border-color: var(--gold) }
+  .qr-card h4{font-family:var(--font-titulo); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#111; font-weight:800}
+  .qr-card p{font-size:11px; color:#555; line-height:1.5}
+  .survey-info-qr{
+    background: var(--blue); border-radius:18px; padding:26px 24px; color:white; display:flex; flex-direction:column; gap:14px; position:relative; overflow:hidden;
+    transition: background .4s;
+  }
+  [data-theme="human"] .survey-info-qr{ background: linear-gradient(135deg, #7a0f14 0%, #4a070b 100%); }
+  .survey-info-qr h3{font-family:var(--font-titulo); font-size:24px; line-height:1; text-transform:uppercase}
+  .survey-info-qr p{font-size:13px; line-height:1.7; color:rgba(255,255,255,.88)}
+  .survey-links{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+  .survey-links a{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:999px; font-weight:800; font-size:12px; letter-spacing:.06em; text-transform:uppercase; transition:.2s; cursor:pointer;
+  }
+  .survey-links .primary{ background:white; color: var(--blue-dark); }
+  [data-theme="human"] .survey-links .primary{ color:#4a070b }
+  .survey-links .secondary{ background: rgba(255,255,255,.14); color:white; border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(6px)}
+  .survey-links a:hover{transform:translateY(-1px); filter:brightness(1.05)}
+  .qr-url{font-family:monospace; font-size:11px; background: rgba(0,0,0,.18); padding:8px 10px; border-radius:8px; color:rgba(255,255,255,.9); word-break:break-all; border:1px solid rgba(255,255,255,.12)}
+  /* FOOTER */
+  footer{
+    max-width:1280px; margin:0 auto; border-left:1px solid var(--line-soft); border-right:1px solid var(--line-soft);
+    background: var(--bg-card); padding:36px 32px 28px; transition: background .4s, border-color .4s;
+  }
+  .footer-top{ display:grid; grid-template-columns: 1.2fr .8fr .8fr; gap:28px; padding-bottom:28px; border-bottom:1px solid var(--line-soft)}
+  .footer-brand h3{font-family:var(--font-titulo); font-size:22px; letter-spacing:.02em; color:var(--gold); font-weight:700; text-transform:uppercase}
+  .footer-brand p{font-size:13px; line-height:1.7; color:var(--text-muted); margin-top:10px; max-width:420px}
+  .footer-col h4{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:14px}
+  .footer-col ul{list-style:none; display:grid; gap:8px}
+  .footer-col a{font-size:13px; color:var(--text-muted); transition:.2s}
+  .footer-col a:hover{color:var(--gold)}
+  .socials{display:flex; gap:10px; margin-top:14px}
+  .socials a{width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background: var(--bg-soft); border:1px solid var(--line-soft); color:var(--gold); font-size:16px; transition:.2s; font-weight:800}
+  .socials a:hover{background:var(--gold); color:var(--text-dark); border-color:var(--gold); transform:translateY(-2px)}
+  .socials a svg{width:18px; height:18px; fill:currentColor}
+  .footer-bottom{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding-top:18px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); font-weight:600}
+  .footer-bottom .legal{display:flex; gap:18px; flex-wrap:wrap}
+  .info-ribbon{
+    display:grid; grid-template-columns: repeat(3,1fr); gap:1px; background: var(--line-soft); border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+    max-width:1280px; margin:0 auto;
+  }
+  .info-ribbon div{ background: var(--bg-card); padding:16px 20px; display:flex; align-items:center; gap:12px}
+  .info-ribbon i{width:36px; height:36px; border-radius:50%; background:var(--gold); color:var(--text-dark); display:grid; place-items:center; font-size:16px; flex-shrink:0}
+  .info-ribbon strong{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); display:block}
+  .info-ribbon span{font-size:12px; font-weight:600; color:var(--text-muted)}
+  @media(max-width: 1100px){
+    .cartelera-grid{grid-template-columns: repeat(3,1fr)}
+    .people-grid{grid-template-columns: repeat(3,1fr)}
+    .directors-grid{grid-template-columns: repeat(2,1fr)}
+    .games-grid{grid-template-columns: repeat(2,1fr)}
+  }
+  @media(max-width: 980px){
+    .hero{grid-template-columns:1fr}
+    .hero-left{border-right:none; border-bottom:1px solid var(--line-soft); padding:32px 24px}
+    .hero-right{padding:32px 24px}
+    .survey-qr-layout{grid-template-columns:1fr}
+    .info-ribbon{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .mobile-toggle{display:grid}
+    .directors-grid{grid-template-columns:1fr}
+    .theme-switch-wrap{padding:5px 8px}
+    .switch-label{display:none}
+  }
+  @media(max-width: 640px){
+    .section{padding:28px 18px}
+    .section-wrap{padding:0 14px} .nav-inner{padding:12px 14px} .hero{padding:14px 14px 0}
+    .cartelera-grid{grid-template-columns:1fr 1fr}
+    .people-grid{grid-template-columns:1fr 1fr}
+    .games-grid{grid-template-columns:1fr}
+    .footer-top{grid-template-columns:1fr}
+    .hero-meta{grid-template-columns:1fr}
+    h1{font-size:40px}
+  }
+  @media(max-width: 460px){
+    .cartelera-grid{grid-template-columns:1fr}
+  }
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px);
+    background: var(--gold); color:var(--text-dark); padding:14px 20px; border-radius:999px;
+    font-weight:700; font-size:13px; box-shadow:0 10px 28px rgba(0,0,0,.35); opacity:0; transition:.35s; z-index:100; pointer-events:none;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0); opacity:1}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark" aria-hidden="true">
+        <img src="imagenes/Canes Logo.png" alt="Canes Logo"/>
+      </div>
+      <div class="logo-text">
+        <strong><span class="festival-word">FESTIVAL</span> <span class="rest-word">DE CANES</span></strong>
+        <span></span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#cartelera">Cartelera</a>
+      <a href="#actores">Actores</a>
+      <a href="#directores">Directores</a>
+      <a href="#juegos">Minijuegos</a>
+      <a href="#encuesta">Encuesta</a>
+    </div>
+    <div class="nav-actions">
+      <!-- NUEVO SLIDE perro/humano -->
+      <div class="theme-switch-wrap" title="Cambiar visión">
+        <div class="switch-icon paw active" id="iconPaw" aria-hidden="true">🐾</div>
+        <button class="switch-track" id="themeToggle" aria-label="Cambiar a modo humano" aria-pressed="false">
+          <span class="switch-thumb" id="switchThumb">●</span>
+        </button>
+        <div class="switch-icon human" id="iconHuman" aria-hidden="true">🧑</div>
+        <div class="switch-label" id="themeLabel">MODO<br>PERRO <small>visión canina</small></div>
+      </div>
+      <a href="#cartelera" class="btn-ticket">Entradas</a>
+      <button class="mobile-toggle" id="mobileMenu" aria-label="Menú">☰</button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="eyebrow">Festival de películas para los caninos • 7ª edición</div>
+    <h1><span class="festival-word">Festival</span> de Canes <em></em></h1>
+    <p class="hero-desc">Este festival canino es una expresión de cómo se complejizó la relación entre perros y humanos hasta el punto de que tienen su propia inserción en el arte, en este caso el cine, con sus propias peculiaridades y narrativas. <strong style="color:var(--gold)"> Hecho por perros y para perros.</strong></p>
+    <div class="hero-meta">
+      <div class="meta-card"><strong>📅 Duración</strong><span>12 días</span><small>18PM a 00AM</small></div>
+      <div class="meta-card"><strong>📍 Sede</strong><span>La Alfombra Azul</span><small></small></div>
+      <div class="meta-card"><strong>🎞️ Formato</strong><span>35mm + Olfativo</span><small>Sonido ladrido 7.1</small></div>
+    </div>
+    <div class="hero-ctas">
+      <a href="#cartelera" class="btn-primary">Ver cartelera →</a>
+      <a href="#encuesta" class="btn-ghost">Participar encuesta</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="ritual"></div>
+    <div class="seal"><img src="imagenes/Canes Logo.png" alt="Canes - Logo Festival"/><div class="seal-inner"><div class="seal-dog">🐶</div><div class="seal-text">PAWM DOG</div><div class="seal-sub">Festival de Canes</div></div></div>
+    <h2>La Alfombra Azul</h2>
+    <p>Nombre del acontecimiento Festival de Canes<br>Horario del día, de 18PM a 00AM<br>Duración. 12 días</p>
+    <p style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; opacity:.7; border-top:1px solid rgba(255,255,255,.22); padding-top:14px; margin-top:4px">Visión tricromática • Marrón • Amarillo • Azul</p>
+  </div>
+</div>
+
+<div class="info-ribbon">
+  <div><i>🐾</i><div><strong>Visión Perruna Activa</strong><span>Paleta optimizada para dicrómatas</span></div></div>
+  <div><i>🎬</i><div><strong>10 Películas en competencia</strong><span>Selección oficial + Muestra Olfativa</span></div></div>
+  <div><i>🏆</i><div><strong>Palma de Hueso de Oro</strong><span>Gala de cierre en La Alfombra Azul</span></div></div>
+</div>
+
+<!-- 
+
+<div class="section-wrap">
+  <!-- CARTELERA 10 PELÍCULAS -->
+  <section class="section" id="cartelera">
+    <div class="section-header">
+      <div class="section-title"><div class="icon">🎞️</div><h2>Cartelera oficial <span>10 películas — Selección La Alfombra Azul</span></h2></div>
+      <a href="#" class="link-more" onclick="toast('Programación completa: 10 títulos en competencia'); return false;">Ver programación →</a>
+    </div>
+        <div class="cartelera-grid">
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/amores perros.png" alt="Amores Perros - Una historia de amor aunque ladren"/><div class="poster-gradient"></div><div class="top"><span class="badge pink">RomCom</span><span class="movie-year">2126 • 108′</span></div></div>
+        <div class="movie-body"><h3>Amores Perros <span>RomCom • Gala apertura</span></h3><div class="movie-meta"><span>⭐ 9.1</span><i></i><span>Elena Ramírez y Mateo Solís</span></div><p class="movie-desc">Dos perros callejeros y sus humanos se enamoran en una calle adoquinada al atardecer. Una historia donde el amor se huele.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/g4nZquCJVGE" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary" onclick="toast('Guardada 🦴')">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/la guerra de los bigotes.png" alt="La guerra de los bigotes"/><div class="poster-gradient"></div><div class="top"><span class="badge green">Terror • Ciencia Ficción</span><span class="movie-year">2126 • 98′</span></div></div>
+        <div class="movie-body"><h3>La guerra de los bigotes <span>Terror / Ciencia ficción</span></h3><div class="movie-meta"><span>⭐ 8.7</span><i></i><span>+16</span></div><p class="movie-desc">Una nave felina gigante sobrevuelan la ciudad en ruinas. Perros miran al cielo mientras el rayo cae. Ellos son los protagonistas.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/1NgdNwGJu8s" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/Perronator.png" alt="El Perronator - Mitad perro mitad máquina"/><div class="poster-gradient"></div><div class="top"><span class="badge">Acción</span><span class="movie-year">2126 • 112′</span></div></div>
+        <div class="movie-body"><h3>El Perronator <span>Acción • Dir. Chihuahua Nolan</span></h3><div class="movie-meta"><span>⭐ 8.9</span><i></i><span>+13</span></div><p class="movie-desc">Mitad perro. Mitad máquina. Todo justicia. Un pitbull cyborg con ojo rojo patrulla el invierno post-apocalíptico.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/jVi7T5lwgn8" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/Canis mundana.png" alt="Canis Mundana"/><div class="poster-gradient"></div><div class="top"><span class="badge dark">Indie</span><span class="movie-year">2126 • 89′</span></div></div>
+        <div class="movie-body"><h3>Canis Mundana <span>Indie • Premio Jurado Perro</span></h3><div class="movie-meta"><span>⭐ 8.5</span><i></i><span>Cannes Canine 2126</span></div><p class="movie-desc">Una pelota olvidada en el pasto húmedo. Cine contemplativo para público de cuatro patas, fotografiada por Sniffs Macgee.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/Pe8T2bgiBGk" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/Scent.png" alt="Scent - El perro que puede oler emociones"/><div class="poster-gradient"></div><div class="top"><span class="badge blue">Superhéroes</span><span class="movie-year">2126 • 121′</span></div></div>
+        <div class="movie-body"><h3>Scent <span>Superhéroes • Dir. Dog Reimi</span></h3><div class="movie-meta"><span>⭐ 8.8</span><i></i><span>ATP</span></div><p class="movie-desc">El perro que puede oler emociones. Desde la cornisa, los hilos de colores revelan secretos de la ciudad.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/41FdnXfqyMQ" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/My big puppy.PNG" alt="My Big Puppy"/><div class="poster-gradient"></div><div class="top"><span class="badge" style="background:#ffb3c6;color:#4a0a14">Infantil</span><span class="movie-year">2126 • 76′</span></div></div>
+        <div class="movie-body"><h3>My big Puppy <span>Infantil • +4 años</span></h3><div class="movie-meta"><span>⭐ 8.4</span><i></i><span>ATP</span></div><p class="movie-desc">Un cachorro gigante sobre un rascacielos bajo la luna sonriente. Aventura dulce sobre crecer sin dejar de jugar.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/jbbmPsTJcVA" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/Pitbull.png" alt="Pitbull El último reggaetonero"/><div class="poster-gradient"></div><div class="top"><span class="badge" style="background:#111;color:#f7d40e;border:1px solid #f7d40e">Autobiográfica</span><span class="movie-year">2126 • 102′</span></div></div>
+        <div class="movie-body"><h3>Pitbull: el último reguetonero <span>Autobiográfica</span></h3><div class="movie-meta"><span>⭐ 9.0</span><i></i><span>ATP</span></div><p class="movie-desc">Gafas, hueso de oro y multitud en éxtasis. De chenil a estadio, la historia del perro que ladró al ritmo del mundo.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/wtKFQ2UZ8Ys" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/pastores de ayer.png" alt="Pastores de ayer Drama de época"/><div class="poster-gradient"></div><div class="top"><span class="badge" style="background:#5a3e1b;color:#ffea7a">Drama de época</span><span class="movie-year">2126 • 131′</span></div></div>
+        <div class="movie-body"><h3>Pastores de ayer <span>Drama de época</span></h3><div class="movie-meta"><span>⭐ 8.6</span><i></i><span>Con Brad Pittbull</span></div><p class="movie-desc">Colinas al atardecer, ovejas y dos pastores alemanes custodios. Un western ovino con Rin-Tin-Tin Shepard.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/cDuhTwBxaos" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/Huellas del mal.png" alt="Huellas del mal"/><div class="poster-gradient"></div><div class="top"><span class="badge" style="background:#1a252f;color:#ffea7a;border:1px solid #5a6a7a">Policial</span><span class="movie-year">2126 • 107′</span></div></div>
+        <div class="movie-body"><h3>Huellas del mal <span>Policial • Thriller</span></h3><div class="movie-meta"><span>⭐ 8.9</span><i></i><span>Con Héctor, Rocky y Luna</span></div><p class="movie-desc">Calle mojada, neón BAR CANINO y sirenas. Dos sabuesos tras una pista que solo un hocico puede seguir.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/shorts/svfe8Bs1EDs" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+      <article class="movie-card">
+        <div class="movie-poster"><img class="poster-img" src="imagenes/Dog-murai.png" alt="Dog-Murai A Ronin's Path"/><div class="poster-gradient"></div><div class="top"><span class="badge purple">Anime</span><span class="movie-year">2126 • 98′</span></div></div>
+        <div class="movie-body"><h3>Dog-Murai <span>Anime • Samurái</span></h3><div class="movie-meta"><span>⭐ 9.2</span><i></i><span>Estudio Shibuya</span></div><p class="movie-desc">Un shiba ronin de pelaje blanco y kimono azul porta katana entre hojas de arce. Honor, filo y ladrido.</p><div class="movie-actions"><a class="btn-sm primary" href="https://www.youtube.com/watch?v=REEMPLAZAR_DOGMURAI" target="_blank" rel="noopener">Ver trailer</a><button class="btn-sm secondary">+ Lista</button></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ACTORES 10 -->
+  <section class="section section-alt" id="actores">
+    <div class="section-header">
+      <div class="section-title"><div class="icon">🐕</div><h2>Actores Perros <span>10 estrellas — elenco completo</span></h2></div>
+      <p>El plantel que inventamos — de galanes a comediantes, todos con pedigrí de Alfombra Azul.</p>
+    </div>
+    <div class="people-grid">
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/brad-pittbull.png" alt="Brad Pittbull" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Brad Pittbull <em>Pitbull americano</em></h4><p class="role">El galán rudo de Amores Perros. Mirada triste, mandíbula de oro.</p><div class="tags"><span class="tag">RomCom</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/golden-retriever-downey-jr.png" alt="Golden Retriever Downey Jr." style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Golden Retriever Downey Jr. <em>Golden</em></h4><p class="role">Iron Paw himself. Carisma, ironía y trae la pelota aunque vuele.</p><div class="tags"><span class="tag">Superhéroes</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/husky-jackman.png" alt="Husky Jackman" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Husky Jackman <em>Siberiano</em></h4><p class="role">Wolverine de cuatro patas. Aullido grave, corazón de cachorro.</p><div class="tags"><span class="tag">Acción</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/jim-caniche.png" alt="Jim Caniche" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Jim Caniche <em>Caniche</em></h4><p class="role">Maestro de la mueca. De drama a comedia sin despeinarse.</p><div class="tags"><span class="tag">Comedia</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/jennifer-anispug.png" alt="Jennifer AnisPug" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Jennifer AnisPug <em>Pug</em></h4><p class="role">Reina del romcom canino. Ronquido icónico, timing perfecto.</p><div class="tags"><span class="tag">RomCom</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/zendaya-husky.png" alt="Zendaya Husky" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Zendaya Husky <em>Husky</em></h4><p class="role">Fashion icon de la manada. Pasarela y drama indie.</p><div class="tags"><span class="tag">Indie</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/scarlett-johansspaniel.png" alt="Scarlett JohansSpaniel" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Scarlett JohansSpaniel <em>Cocker</em></h4><p class="role">Voz de terciopelo. Espía letal en Scent y elegancia en alfombra.</p><div class="tags"><span class="tag">Policial</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/arnold-schnauzerenegger.png" alt="Arnold Schnauzerenegger" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Arnold Schnauzerenegger <em>Schnauzer</em></h4><p class="role">“Hasta la vista, croqueta”. Músculo y ternura en Perronator.</p><div class="tags"><span class="tag">Acción</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/ricardo-darinpug.png" alt="Ricardo DarínPug" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Ricardo DarínPug <em>Pug argentino</em></h4><p class="role">El sabueso de Huellas del mal. Seco, porteño, infalible.</p><div class="tags"><span class="tag">Policial</span></div></article>
+      <article class="person-card"><div class="person-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/emma-watshihtzu.png" alt="Emma WatShihTzu" style="width:100%; height:100%; object-fit:cover; display:block"/></div><h4>Emma WatShihTzu <em>Shih Tzu</em></h4><p class="role">Magia y encanto infantil. Protagonista de My big Puppy.</p><div class="tags"><span class="tag">Infantil</span></div></article>
+    </div>
+  </section>
+
+  <!-- DIRECTORES 5 -->
+  <section class="section" id="directores">
+    <div class="section-header">
+      <div class="section-title"><div class="icon">🎬</div><h2>Directores Perros <span>Autores con olfato narrativo</span></h2></div>
+      <p>Los cinco elegidos — cada uno con su universo ladrado.</p>
+    </div>
+    <div class="directors-grid">
+      <article class="director-card"><div class="director-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/guillermo-el-perron.png" alt="Guillermo el Perrón" style="width:100%; height:100%; object-fit:cover; display:block"/></div><div><h4>Guillermo el Perrón <span>El poeta de la baba</span></h4><p>De “El Laberinto del Can” a “La Forma del Charco”. Fantástico húmedo y monstruos tiernos.</p><div class="director-films"><span class="tag">La Forma del Charco</span><span class="tag">Pinocho Perro</span></div></div></article>
+      <article class="director-card"><div class="director-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/quentin-terrenpoodle.png" alt="Quentin Terrenpoodle" style="width:100%; height:100%; object-fit:cover; display:block"/></div><div><h4>Quentin Terrenpoodle <span>Diálogos que muerden</span></h4><p>Capítulos, sangre de tomate y patas en primer plano. “Perros de Reserva” es culto en perreras.</p><div class="director-films"><span class="tag">Kill Bark</span><span class="tag">Perros de Reserva</span></div></div></article>
+      <article class="director-card"><div class="director-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/steven-spielbeagle.png" alt="Steven SpielBeagle" style="width:100%; height:100%; object-fit:cover; display:block"/></div><div><h4>Steven SpielBeagle <span>Blockbuster con corazón</span></h4><p>Hizo llorar a todos con “Siempre a tu lado, guau”. Maestro de la aventura familiar y Scent.</p><div class="director-films"><span class="tag">Jurassic Bark</span><span class="tag">Scent</span></div></div></article>
+      <article class="director-card"><div class="director-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/chihuahua-nolan.png" alt="Chihuahua Nolan" style="width:100%; height:100%; object-fit:cover; display:block"/></div><div><h4>Chihuahua Nolan <span>El arquitecto del ladrido</span></h4><p>Tiempo, gravedad y ladridos en capas. Su “Perronator” dobla el espacio-tiempo en 70mm.</p><div class="director-films"><span class="tag">Perronator</span><span class="tag">In-Bark-ception</span></div></div></article>
+      <article class="director-card"><div class="director-avatar" style="padding:0; overflow:hidden; border:none; background:none"><img src="imagenes/dog-reimi.png" alt="Dog Reimi" style="width:100%; height:100%; object-fit:cover; display:block"/></div><div><h4>Dog Reimi <span>Horror con correa</span></h4><p>Cámaras que giran, humor negro y mucho zoom. Dueño del universo Scent y el terror sci-fi.</p><div class="director-films"><span class="tag">Scent</span><span class="tag">Dog-Murai</span></div></div></article>
+    </div>
+  </section>
+
+  <!-- MINIJUEGOS 4 -->
+  <section class="section section-alt" id="juegos">
+    <div class="section-header">
+      <div class="section-title"><div class="icon">🎮</div><h2>Minijuegos <span>4 experiencias — espacios reservados</span></h2></div>
+      <p>No están jugables aún — dejamos el espacio listo para sumarlos. Cada uno ligado a una película del festival.</p>
+    </div>
+    <div class="games-grid">
+      <div class="game-card" id="game-bigotes" style="padding:0; overflow:hidden">
+        <div style="padding:18px 18px 0; text-align:center">
+          <div class="game-icon" style="margin:0 auto 10px">⚔️</div>
+          <h4>La guerra de los bigotes <small>Terror Ciencia ficción</small></h4>
+          <p style="font-size:11px; line-height:1.5; color:var(--text-muted); margin-top:6px">¡Ya jugable! Perros vs Gatos.</p>
+        </div>
+        <div style="margin:12px; border-radius:12px; overflow:hidden; border:2px solid var(--line-soft); background:#252932; height:520px; position:relative">
+          <iframe src="juegos/La guerra de los bigotes.html" style="width:100%; height:100%; border:none; display:block" loading="lazy" title="La guerra de los bigotes - Juego"></iframe>
+        </div>
+        <div style="padding:0 18px 18px; text-align:center">
+          <p style="font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); font-weight:600">Toca para elegir y jugar — 3 en línea perruno</p>
+          <a href="juegos/La guerra de los bigotes.html" target="_blank" style="margin-top:10px; display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:8px 14px; border-radius:999px; background:var(--line); color:var(--text-dark); border:1px solid var(--line)">Abrir en pantalla completa →</a>
+        </div>
+      </div>
+      <div class="game-card" id="game-canis" style="padding:0; overflow:hidden">
+        <div style="padding:18px 18px 0; text-align:center">
+          <div class="game-icon" style="margin:0 auto 10px">🎨</div>
+          <h4>Canis Mundana <small>Indie — paseo poético</small></h4>
+          <p style="font-size:11px; line-height:1.5; color:var(--text-muted); margin-top:6px">¡Ya jugable! Esquiva edificios.</p>
+        </div>
+        <div style="margin:12px; border-radius:12px; overflow:hidden; border:2px solid var(--line-soft); background:#181d1a; height:560px; position:relative">
+          <iframe src="juegos/Canis mundana.html" style="width:100%; height:100%; border:none; display:block" loading="lazy" title="Canis Mundana - Juego"></iframe>
+        </div>
+        <div style="padding:0 18px 18px; text-align:center">
+          <p style="font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); font-weight:600">ESPACIO / Toque para saltar — 20 edificios para ganar</p>
+          <a href="juegos/Canis mundana.html" target="_blank" style="margin-top:10px; display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:8px 14px; border-radius:999px; background:var(--line); color:var(--text-dark); border:1px solid var(--line)">Abrir en pantalla completa →</a>
+        </div>
+      </div>
+      <div class="game-card" id="game-perronator" style="padding:0; overflow:hidden">
+        <div style="padding:18px 18px 0; text-align:center">
+          <div class="game-icon" style="margin:0 auto 10px">🤖</div>
+          <h4>Perronator <small>Acción shooter</small></h4>
+          <p style="font-size:11px; line-height:1.5; color:var(--text-muted); margin-top:6px">¡Ya jugable! Derribá drones.</p>
+        </div>
+        <div style="margin:12px; border-radius:12px; overflow:hidden; border:2px solid var(--line-soft); background:#97a1ab; height:520px; position:relative">
+          <iframe src="Perronator/perroneitor.html" style="width:100%; height:100%; border:none; display:block" loading="lazy" title="Perronator - Juego"></iframe>
+        </div>
+        <div style="padding:0 18px 18px; text-align:center">
+          <p style="font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); font-weight:600">Clic para disparar — 10 tiros · 1500 pts para ganar</p>
+          <a href="Perronator/perroneitor.html" target="_blank" style="margin-top:10px; display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:8px 14px; border-radius:999px; background:var(--line); color:var(--text-dark); border:1px solid var(--line)">Abrir en pantalla completa →</a>
+        </div>
+      </div>
+      <div class="game-card featured" id="game-alfombra" style="padding:0; overflow:hidden">
+        <div style="padding:18px 18px 0; text-align:center">
+          <div class="game-icon" style="margin:0 auto 10px">✨</div>
+          <h4>La Alfombra Azul <small>— Festival</small></h4>
+          <p style="font-size:11px; line-height:1.5; color:var(--text-muted); margin-top:6px">¡Ya jugable! Corre sobre la alfombra azul.</p>
+        </div>
+        <div style="margin:12px; border-radius:12px; overflow:hidden; border:2px solid var(--gold); background:#000; height:380px; position:relative">
+          <iframe src="juegos/alfombra azul.html" style="width:100%; height:100%; border:none; display:block" loading="lazy" title="Alfombra Azul Run - Juego"></iframe>
+        </div>
+        <div style="padding:0 18px 18px; text-align:center">
+          <p style="font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); font-weight:600">ESPACIO / ↑ para saltar · ↓ para agacharte</p>
+          <a href="juegos/alfombra azul.html" target="_blank" style="margin-top:10px; display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:8px 14px; border-radius:999px; background:var(--gold); color:var(--text-dark); border:1px solid var(--gold)">Abrir en pantalla completa →</a>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px; background: var(--bg-card); border:1px solid var(--line-soft); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between">
+      <span style="font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--gold)">¿Idea para un juego? La escuchamos</span>
+      <button class="btn-sm secondary" onclick="toast('¡Gracias! Envía tu idea a juegos@festivaldecanes.woof')">Proponer juego →</button>
+    </div>
+  </section>
+
+  <!-- ENCUESTA QR + LINK -->
+  <section class="section" id="encuesta">
+    <div class="section-header">
+      <div class="section-title"><div class="icon">📋</div><h2>Encuesta del Festival <span>Tu ladrido cuenta</span></h2></div>
+      <p></p>
+    </div>
+    <div class="survey-qr-layout">
+      <div class="qr-card">
+        <div class="qr-box" aria-label="QR encuesta">
+  <img src="imagenes/QR encuesta.jpeg" alt="QR Encuesta Festival de Canes" style="width:100%; height:100%; object-fit:contain; display:block">
+</div>
+         
+         
+          
+            
+        </div>
+        <h4>Escaneá para votar</h4>
+        <p><br> <code></code></p>
+        <span style="font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#888; font-weight:700"></span>
+      </div>
+      <div class="survey-info-qr">
+        <h3>¿Qué película te hizo mover la cola?</h3>
+        <p>Tu voto elige la <strong>Palma de Hueso de Oro del público</strong>. Tarda 2 minutos. Participas por 2 pases a La Alfombra Azul.</p>
+        <div class="qr-url" id="surveyUrl">https://docs.google.com/forms/d/e/1FAIpQLSc2WLrs8d5vtqfND3wkbfniSZ5rP1mt6AxuqcYmDfyCxLQ2Pw/viewform</div>
+        <div class="survey-links">
+          <a class="primary" href="https://docs.google.com/forms/d/e/1FAIpQLSc2WLrs8d5vtqfND3wkbfniSZ5rP1mt6AxuqcYmDfyCxLQ2Pw/viewform" target="_blank" rel="noopener">Abrir encuesta externa →</a>
+          <a class="secondary" href="#" onclick="navigator.clipboard.writeText(document.getElementById('surveyUrl').textContent); toast('Link copiado 🐾'); return false;">Copiar link</a>
+        </div>
+        <ul style="list-style:none; display:grid; gap:10px; margin-top:8px">
+          <li style="display:flex; gap:10px; font-size:12px; align-items:center"><span style="width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,.14); display:grid; place-items:center; border:1px solid rgba(255,255,255,.18)">⏱️</span> 2 minutos • anónima • para humanos y canes</li>
+          <li style="display:flex; gap:10px; font-size:12px; align-items:center"><span style="width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,.14); display:grid; place-items:center; border:1px solid rgba(255,255,255,.18)">🎁</span> Sorteo último día: kit huesitos + pases</li>
+        </ul>
+        <p style="font-size:11px; opacity:.75; margin-top:auto; border-top:1px solid rgba(255,255,255,.15); padding-top:12px"><code style="background:rgba(0,0,0,.22); padding:2px 6px; border-radius:4px"></code><code>href</code><code>&lt;&quot;&quot;&gt;</code>.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h3>FESTIVAL DE CANES — </h3>
+      <p>Festival de películas para los caninos. Una celebración donde el cine se cuenta a ras del suelo, a altura de hocico y con la nobleza de quien mueve la cola sin pedir nada a cambio.</p>
+      <div class="socials">
+        <a href="https://www.youtube.com/@Canesengala/shorts" target="_blank" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24"><path d="M23 12s0-4.1-.5-6.1a1.5 1.5 0 0 0-1-1C19.4 4.4 12 4.4 12 4.4s-7.4 0-9.5.5a1.5 1.5 0 0 0-1 1C1 7.9 1 12 1 12s0 4.1.5 6.1a1.5 1.5 0 0 0 1 1c2.1.5 9.5.5 9.5.5s7.4 0 9.5-.5a1.5 1.5 0 0 0 1-1C23 16.1 23 12 23 12ZM9.8 15.5V8.5L15.5 12 9.8 15.5Z"/></svg></a>
+        <a href="https://www.tiktok.com/@canesdegala" target="_blank" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24"><path d="M19.6 7.2a5.2 5.2 0 0 1-3.7-1.5 5.1 5.1 0 0 1-1.5-3.7V2H10v13.7a3.2 3.2 0 0 1-3.2 3.2 3.2 3.2 0 0 1-3.2-3.2 3.2 3.2 0 0 1 3.2-3.2c.4 0 .7.1 1 .2V8.4a7.1 7.1 0 0 0-1-.1A7.1 7.1 0 0 0 13.7 15a7.1 7.1 0 0 0 7.1-7.1c0-.4 0-.8-.1-1.2-.3.4-.7.7-1.1 1Z"/></svg></a>
+        <a href="https://instagram.com" target="_blank" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.5.4.2.7.4 1 .8.3.3.6.6.8 1 .2.4.4 1 .5 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.5 2.2a3.6 3.6 0 0 1-.8 1 3.6 3.6 0 0 1-1 .8c-.4.2-1 .4-2.2.5-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.5a3.6 3.6 0 0 1-1-.8 3.6 3.6 0 0 1-.8-1c-.2-.4-.4-1-.5-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.5-2.2.2-.4.4-.7.8-1 .3-.3.6-.6 1-.8.4-.2 1-.4 2.2-.5C8.4 2.2 8.8 2.2 12 2.2Zm0 1.8c-3.1 0-3.5 0-4.7.1-1 .1-1.6.2-2 .4a2 2 0 0 0-.7.5 2 2 0 0 0-.5.7c-.1.4-.3 1-.4 2C4.6 8.5 4.6 8.9 4.6 12s0 3.5.1 4.7c.1 1 .2 1.6.4 2 .1.3.3.5.5.7.2.2.4.4.7.5.4.1 1 .3 2 .4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1-.1 1.6-.2 2-.4.3-.1.5-.3.7-.5.2-.2.4-.4.5-.7.1-.4.3-1 .4-2 .1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1-.2-1.6-.4-2a2 2 0 0 0-.5-.7 2 2 0 0 0-.7-.5c-.4-.1-1-.3-2-.4-1.2-.1-1.6-.1-4.7-.1Zm0 3.2A5.4 5.4 0 1 1 6.6 12 5.4 5.4 0 0 1 12 7.2Zm0 1.8A3.6 3.6 0 1 0 15.6 12 3.6 3.6 0 0 0 12 9ZM18.4 6a1.3 1.3 0 1 1-1.3 1.3A1.3 1.3 0 0 1 18.4 6Z"/></svg></a>
+        <a href="#" aria-label="X" title="X / Twitter" onclick="toast('¡Síguenos en X @FestivalDeCanes!'); return false;">𝕏</a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Explorar</h4><ul><li><a href="#cartelera">Cartelera</a></li><li><a href="#actores">Actores perros</a></li><li><a href="#directores">Directores perros</a></li><li><a href="#juegos">Minijuegos</a></li><li><a href="#encuesta">Encuesta</a></li></ul></div>
+    <div class="footer-col"><h4></h4><ul><li><a href="#" onclick="toast('La Alfombra Azul — Av. Perruna 123, La Plata'); return false;">La Alfombra Azul</a></li><li><a href="#" onclick="toast('Horario: 18PM a 00AM'); return false;">Horarios</a></li><li><a href="#" onclick="toast('Entradas en boletería y online'); return false;">Entradas</a></li><li><a href="/cdn-cgi/l/email-protection#c3abacafa283a5a6b0b7aab5a2afa7a6a0a2ada6b0edb4acaca5"><span class="__cf_email__" data-cfemail="c5adaaa9a485a3a0b6b1acb3a4a9a1a0a6a4aba0b6ebb2aaaaa3">[email&#160;protected]</span></a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2126 Festival de Canes — Hecho por perros y para perros. Todos los ladridos reservados.</span>
+    <div class="legal"><a href="#" onclick="toast('Aviso legal'); return false;">Aviso legal</a><a href="#" onclick="toast('Privacidad perruna'); return false;">Privacidad</a><span style="display:inline-flex; align-items:center; gap:6px"><span style="width:8px; height:8px; border-radius:50%; background:var(--gold); display:inline-block"></span> Visión canina activa</span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const html = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const thumb = document.getElementById('switchThumb');
+  const iconPaw = document.getElementById('iconPaw');
+  const iconHuman = document.getElementById('iconHuman');
+  const label = document.getElementById('themeLabel');
+  let isDog = true;
+  function updateSwitch(){
+    if(isDog){
+      html.setAttribute('data-theme','dog');
+      iconPaw.classList.add('active'); iconHuman.classList.remove('active');
+      label.innerHTML='MODO<br>PERRO <small>visión canina</small>';
+      toggle.setAttribute('aria-pressed','false'); toggle.setAttribute('aria-label','Cambiar a modo humano');
+      thumb.textContent='🐾';
+      toast('🐶 Modo Perro: marrón • amarillo • azul');
+    } else {
+      html.setAttribute('data-theme','human');
+      iconHuman.classList.add('active'); iconPaw.classList.remove('active');
+      label.innerHTML='MODO<br>HUMANO <small>bordó cine</small>';
+      toggle.setAttribute('aria-pressed','true'); toggle.setAttribute('aria-label','Volver a modo perro');
+      thumb.textContent='👁️';
+      toast('👁️ Modo Humano: bordó cine • dorado • luz cálida');
+    }
+  }
+  toggle.addEventListener('click', () => { isDog = !isDog; updateSwitch(); });
+  // también click en iconos cambia
+  iconPaw.addEventListener('click', ()=>{ if(!isDog){isDog=true; updateSwitch();}});
+  iconHuman.addEventListener('click', ()=>{ if(isDog){isDog=false; updateSwitch();}});
+  // mobile
+  document.getElementById('mobileMenu').addEventListener('click', () => {
+    const links = document.querySelector('.nav-links');
+    const isFlex = links.style.display === 'flex';
+    links.style.display = isFlex ? 'none' : 'flex';
+    if(!isFlex){
+      links.style.position='absolute'; links.style.top='64px'; links.style.left='0'; links.style.right='0';
+      links.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-soft');
+      links.style.flexDirection='column'; links.style.padding='18px'; links.style.borderBottom='1px solid var(--line-soft)'; links.style.zIndex='40';
+    }
+  });
+  function toast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600);
+  }
+  document.querySelectorAll('.nav-links a').forEach(a=> a.addEventListener('click', ()=>{
+    if(window.innerWidth<980) document.querySelector('.nav-links').style.display='none';
+  }));
+  // init thumb
+  thumb.textContent='🐾';
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41bb9d79a311873',t:'MTc5MDUyNDg3NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41c5f48dbb8c816',t:'MTc5MDUzMTY1MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41d0ddc1a6f1530',t:'MTc5MDUzODgwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41d2b435d394703',t:'MTc5MDU0MDAwNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41d4c433d6107e6',t:'MTc5MDU0MTM1OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
